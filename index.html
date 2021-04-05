@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>X.Rates - Currency rates</title>
+    <link rel='stylesheet' href='style.css'>
+    <link rel="preconnect" href="https://fonts.gstatic.com"> 
+    <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
+</head>
+<body>
+<div class='container-head'>
+    <h1 >X.Rates</h1>
+    <p>Your source for currency rates</p>
+</div>
+<div class='container'>
+    <div class = "container-inner">
+    <h5>Select currency and fill an amount</h5>        
+        <div class= 'source_item item'>
+            <div class='item-input'> 
+                <input id='source' type='number' class='source number-only'>  
+            </div>
+            <div class='item-select'> 
+                <select class='select' name='from_currency' id='source_currency' value='0'></select> 
+            </div>
+        </div>
+        <div class= 'target_item item'>
+            <div class='item-input'>
+                <input id='target' type='number' class='target number-only'>    
+            </div>
+            <div class='item-select'>
+                <select class='select' name='to_currency' id='target_currency' value='0'></select>    
+            </div>
+        </div>
+        <div class='swap'>
+            <button type='button' class='button' onclick='swap()'>Swap</button>    
+        </div>
+    </div>
+</div>
+
+<script src='./currency_info.js' type='text/javascript'></script>
+<script src='./index.js' type='text/javascript'></script>
+</body>
+</html>
