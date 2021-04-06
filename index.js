@@ -118,7 +118,7 @@ function initRates() {
 		let cdiv = document.createElement('div');
 		let rdiv = document.createElement('div');
 
-		cdiv.innerHTML = currency; 
+		cdiv.innerHTML = currency + ' - ' + ( currencyInfo[currency] !== undefined? currencyInfo[currency].name : 'undefined'); 
 		rdiv.innerHTML = rateInfo.rates[currency];
 		pdiv.id = 'x-' + currency; 
 		pdiv.className = 'currency-line';
