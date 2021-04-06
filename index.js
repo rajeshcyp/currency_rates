@@ -3,11 +3,16 @@ const sourceAmount = document.getElementById('source');
 const targetCurrency = document.getElementById('target_currency');
 const targetAmount = document.getElementById('target')
 const result = document.getElementById('result');
+const baseCurrency = document.getElementById('base_currency');
+const rateData = document.getElementById('rateData');  
 
 let currencyInfo = Object.assign({}, currency_info ); 
 let rateInfo = {}; 
 
 async function getData (base = 'USD') {
+
+	console.log('Base :', base)
+
 	const url = `https://api.exchangerate.host/latest?base=${base}`
 	console.log('url ', url); 
 	const resp = await fetch(url);
@@ -37,6 +42,11 @@ function populateCountryCodes() {
         option2.value = currency; 
         option2.text = currency; 
         targetCurrency.add(option2);
+
+		let option3 = document.createElement('option'); 
+        option3.value = currency; 
+        option3.text = currency; 
+        baseCurrency.add(option3);
     }
 	sourceCurrency.value='USD';
     targetCurrency.value='EUR';
@@ -47,6 +57,8 @@ async function init() {
 	rateInfo = await getData(); 
 	populateCountryCodes(); 
 	calcluateRate(false);
+	initRates();
+	displayRates();
 }
 
 onload = function(){ 
@@ -97,6 +109,42 @@ function swap() {
 	targetCurrency.value=sourceCurrency.value
 	sourceCurrency.value=temp; 
 	calcluateRate(false);
+}
+
+function initRates() {
+	for( currency in rateInfo.rates ){
+
+		let pdiv = document.createElement('div'); 
+		let cdiv = document.createElement('div');
+		let rdiv = document.createElement('div');
+
+		cdiv.innerHTML = currency; 
+		rdiv.innerHTML = rateInfo.rates[currency];
+		pdiv.id = 'x-' + currency; 
+		pdiv.className = 'currency-line';
+		cdiv.id = 'c-' + currency; 
+		rdiv.id = 'r-' + currency; 
+
+		pdiv.appendChild(cdiv);
+		pdiv.appendChild(rdiv);
+		rateData.appendChild(pdiv);
+	}
+}
+
+function displayRates() {
+	for( currency in rateInfo.rates ){
+		let id = 'r-'+currency; 
+		let rateline = document.getElementById(id);
+		rateline.innerHTML=rateInfo.rates[currency];
+	}
+}
+
+async function selectBase() {
+	console.log('select Base')
+	let base = baseCurrency.value;
+	rateInfo = await getData(base); 
+	calcluateRate(false);
+	displayRates(); 
 }
 
 sourceCurrency.addEventListener('change', function () { calcluateRate(false);});

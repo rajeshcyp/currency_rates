@@ -71,7 +71,6 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 input, select {
-  border: 1px solid #d2d2d2; 
   padding-left:5px;
   width: 100%;
   border-color: #000;
@@ -79,8 +78,9 @@ input, select {
   font-family: 'Roboto', sans-serif;
   font-weight: 500; 
   font-size:large;
-  color: #DEDADE; 
+  color: #d6c7fa;; 
   background-color: #000;
+  border:none
 }
 input { 
   height:35px;
@@ -155,4 +155,31 @@ select {
     width:99%;
   }
 }
+#rateData {
+  padding:3px 3px; 
+  border-top:1px solid #7885ac;
+  font-size: 14px;
+  font-weight:600;
+  padding-bottom:15px;
+}
+div[id^='x-'] {
+  padding:5px 5px;
+  display:flex; 
+  flex-direction:row;
+  align-content: center;
+  justify-content: space-between;
+  border-bottom:1px solid #434a5e;
+  }
+div[id^='c-'] {
+  color: #9bffb1; 
+  padding:2px 2px;
+  }
+div[id^='r-'] {
+  color: #d6c7fa; 
+  padding:2px 2px;
+}
 
+.footerline {
+  color:#4c71e9;
+  font-size:14px;
+}
