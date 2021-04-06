@@ -1,12 +1,11 @@
-
 const sourceCurrency = document.getElementById('source_currency');
 const sourceAmount = document.getElementById('source');
 const targetCurrency = document.getElementById('target_currency');
 const targetAmount = document.getElementById('target')
+const result = document.getElementById('result');
 
-let currencyInfo = Object.assign({}, currency_info );
+let currencyInfo = Object.assign({}, currency_info ); 
 let rateInfo = {}; 
-
 
 async function getData (base = 'USD') {
 	const url = `https://api.exchangerate.host/latest?base=${base}`
@@ -15,7 +14,6 @@ async function getData (base = 'USD') {
 	const data = await resp.json();
 	return data;
 }
-
 
 function populateRates() {
 	const {rates, base, date } = rateInfo;  
@@ -28,22 +26,7 @@ function populateRates() {
 	}
 }
 
-
-onload = function(){ 
-	var ele = document.querySelectorAll('.number-only')[0];
-	ele.onkeypress = function(e) {
-	   if(isNaN(this.value+''+String.fromCharCode(e.charCode)))
-		  return false;
-	}
-	ele.onpaste = function(e){
-	   e.preventDefault();
-	}
-	init(); 
-}
-
-
 function populateCountryCodes() {
-
 	for( currency in currencyInfo) {
         let option1 = document.createElement('option'); 
         option1.value = currency; 
@@ -60,8 +43,27 @@ function populateCountryCodes() {
 	sourceAmount.value=1;
 }
 
+async function init() {
+	rateInfo = await getData(); 
+	populateCountryCodes(); 
+	calcluateRate(false);
+}
 
-function calcluate(reverse) {
+onload = function(){ 
+	var x = document.querySelectorAll('.number-only');
+	for (i = 0; i < x.length; i++) {
+		x[i].onkeypress = function(e) {
+			if(isNaN(this.value+''+String.fromCharCode(e.charCode)))
+				return false;
+			}
+			x[i].onpaste = function(e){
+			e.preventDefault();
+			}
+	  }
+	init(); 
+}
+
+function calcluateRate(reverse) {
 	let fromCurrency = sourceCurrency.value; 
 	let toCurrency = targetCurrency.value; 
 	let fromAmount = sourceAmount.value; 
@@ -72,9 +74,7 @@ function calcluate(reverse) {
 		fromAmount = targetAmount.value; 	
 	}	
 
-	let source_rate = currencyInfo[fromCurrency].rate; 
-	let target_rate = currencyInfo[toCurrency].rate; 
-	let converted_amount = (Number(Number(fromAmount) * (Number(target_rate) / Number(source_rate))).toFixed(5));
+	let converted_amount = (Number(Number(fromAmount) * (Number(rateInfo.rates[toCurrency]) / Number(rateInfo.rates[fromCurrency]))).toFixed(5));
 
 	if ( reverse===true ) {
 		sourceAmount.value = converted_amount; 
@@ -82,28 +82,26 @@ function calcluate(reverse) {
 	else {
 		targetAmount.value = converted_amount; 
 	}
+	displayResult(); 
 }
+
+function displayResult() {
+	let sourceCurrencyName = Number(sourceAmount.value) > 1 ? currencyInfo[sourceCurrency.value].name_plural : currencyInfo[sourceCurrency.value].name ; 
+	let targetCurrencyName = Number(targetAmount.value) > 1 ? currencyInfo[targetCurrency.value].name_plural : currencyInfo[targetCurrency.value].name ; 
+	result.innerHTML = sourceAmount.value + ' ' + sourceCurrencyName + ' is ' + targetAmount.value + ' ' + targetCurrencyName;
+} 
 
 
 function swap() {
 	let temp = targetCurrency.value; 
 	targetCurrency.value=sourceCurrency.value
 	sourceCurrency.value=temp; 
-	calcluate(false);
+	calcluateRate(false);
 }
 
-
-async function init() {
-	rateInfo = await getData(); 
-	populateRates(); 
-	populateCountryCodes(); 
-	calcluate(false);
-}
-
-
-sourceCurrency.addEventListener('change', function () { calcluate(false);});
-targetCurrency.addEventListener('change', function () { calcluate(false);});
-sourceAmount.addEventListener('input', function () { calcluate(false);});
-targetAmount.addEventListener('input', function () { calcluate(true);}); 
+sourceCurrency.addEventListener('change', function () { calcluateRate(false);});
+targetCurrency.addEventListener('change', function () { calcluateRate(false);});
+sourceAmount.addEventListener('input', function () { calcluateRate(false);});
+targetAmount.addEventListener('input', function () { calcluateRate(true);}); 
 
 
